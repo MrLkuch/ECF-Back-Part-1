@@ -97,7 +97,10 @@ public function load(ObjectManager $manager): void
             // affectation des valeurs statiques
             $user->setEmail($data['email']);
             $user->setRoles($data['roles']);
-            $user->setPassword($data['password']);
+            //$user->setPassword($data['password']);
+            $password = $this->hasher->hashPassword($user, $data['password']);
+            $user->setPassword($password);
+
             $user->setEnabled($data['enabled']);
             $user->setCreatedAt($data['created_at']);
             $user->setUpdatedAt($data['updated_at']);
@@ -115,13 +118,16 @@ public function load(ObjectManager $manager): void
             $this->faker->boolean();
             $this->faker->dateTimeBetween();
 
+            $password = $this->hasher->hashPassword($user, $data['password']);
+
+
             $user = new User();
 
             // affectation des valeurs dynamiques
 
             $user->setEmail($this->faker->email());
             $user->setRoles(['ROLE_USER']);
-            $user->setPassword($this->faker->word());
+            $user->setPassword($password);
             $user->setEnabled($this->faker->boolean());
             $user->setCreatedAt($this->faker->dateTimeBetween('-10 week', '-6 week'));
             $user->setUpdatedAt(($this->faker->dateTimeBetween('+8 week', '+12 week')));
